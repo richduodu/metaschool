@@ -32,8 +32,9 @@ This AI Tutor project is designed to assist students by explaining educational c
 ### Setup
 
 1. Clone the repository
-2. ```bash
+2. Change directory to metaschool folder
+3. ```bash
     cd metaschool
-3. Install the necessary dependencies:
+4. Install the necessary dependencies:
    ```bash
    pip install -r requirements.txt
