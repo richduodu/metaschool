@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Interface</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.min.css">
+    <style>
+        body {
+            margin: 20px;
+        }
+        #response-container {
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Tutor Interface</h1>
+
+    <div>
+        <h2>Ask a Question</h2>
+        <input type="text" id="question-input" placeholder="Enter your question here" style="width: 80%;">
+        <button id="ask-btn">Ask</button>
+    </div>
+
+    <div id="response-container" hidden>
+        <h3>Response:</h3>
+        <p id="response"></p>
+    </div>
+
+    <div>
+        <h2>Upload a Problem</h2>
+        <input type="text" id="problem-input" placeholder="Enter your problem description here" style="width: 80%;">
+        <button id="solve-btn">Solve</button>
+    </div>
+
+    <div id="steps-container" hidden>
+        <h3>Steps:</h3>
+        <ul id="steps-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById("ask-btn").addEventListener("click", function () {
+            const question = document.getElementById("question-input").value;
+
+            fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ question: question }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = data.response;
+                document.getElementById("response-container").hidden = false;
+            });
+        });
+
+        document.getElementById("solve-btn").addEventListener("click", function () {
+            const problem = document.getElementById("problem-input").value;
+
+            fetch("/solve", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ problem: problem }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const stepsList = document.getElementById("steps-list");
+                stepsList.innerHTML = "";
+
+                data.steps.forEach(step => {
+                    const li = document.createElement("li");
+                    li.innerText = step;
+                    stepsList.appendChild(li);
+                });
+
+                document.getElementById("steps-container").hidden = false;
+            });
+        });
+    </script>
+</body>
+</html>
